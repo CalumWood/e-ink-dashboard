@@ -1,0 +1,82 @@
+substitutions:
+  display_model: "7.50in-bv3"
+
+esphome:
+  name: "esp-home-e-ink-display"
+  on_boot:
+    priority: -500
+    then:
+    - script.execute: update_screen
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+    
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "Esphome-Web-e-ink"
+    password: !secret ap_password
+ 
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+logger:
+api:
+  # encryption:
+  #   key: [Enter base64 key here]
+
+http_request:
+    timeout: 10s
+    verify_ssl: false
+
+online_image:
+  - url: !secret server_url
+    id: png_image
+    format: PNG
+    type: BINARY
+    on_download_finished:
+      - delay: 5s
+      - script.execute: update_screen
+
+script:
+  - id: update_screen
+    then:
+      - delay: 10s
+      - component.update: png_image
+
+button:
+  - platform: template
+    name: Update Display
+    id: update_button
+    icon: "mdi:update"
+    on_press:
+      - script.execute: update_screen
+
+time:
+  - platform: sntp
+    on_time:
+      - seconds: 5
+        minutes: /15
+        then:
+        - script.execute: update_screen
+
+spi:
+  clk_pin: 13
+  mosi_pin: 14
+
+display:
+  - platform: waveshare_epaper
+    id: epaper_display
+    cs_pin: 15
+    dc_pin: 27
+    busy_pin:
+      number: 25
+    reset_pin: 26
+    model: ${display_model}
+    update_interval: never
+    lambda: |-
+      it.image(0, 0, id(png_image), COLOR_OFF, COLOR_ON);
