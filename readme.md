@@ -1,6 +1,6 @@
 # ESPHome based E-Ink Dashboard
 
-![Front Picture](screenshots\front_picture.jpg)
+![Front Picture](screenshots/front_picture.jpg)
 
 ## Components
 ### Hardware
@@ -9,7 +9,7 @@
 
 The firmware supports a large amount of the available E-ink displays. These components can then be added to a cheap picture frame to create a low cost e-ink display, see https://esphome.io/components/display/waveshare_epaper.html for more details. 
 
-![Rear Picture](screenshots\back_picture.jpg.jpg)
+![Rear Picture](screenshots/back_picture.jpg)
 
 ### Firmware
 was used in this example and loaded with the firmware using https://esphome.io/. The configuration is defined in the and then set up with the [esphome-eink.yaml](esphome-eink.yaml), note: the following secrets need to be provided in your esphome dashboard's secrets file and if using a different display module, the substitution in the yaml must be changed.
